@@ -25,10 +25,10 @@ function App() {
   const [newTask, setNewTask] = useState(false);
 
   useEffect(() => {
-    const socket = io('http://localhost:3000');
-    socket.on("connect", () => {
-      console.log("connected");
-    })
+    // const socket = io('http://localhost:3000');
+    // socket.on("connect", () => {
+    //   console.log("connected");
+    // })
     axios.get(import.meta.env.VITE_API_URL + "tasks").then((response) => {
       setTasks(response.data);
     });
@@ -73,11 +73,11 @@ function App() {
         </Group>
       </Box>
 
-      <Container>
-        <Button onClick={() => setNewTask(true)} color="blue" leftSection="+">
+      <Stack justify="center">
+        <Button onClick={() => setNewTask(true)} color="blue" leftSection="+" w={300} ml={30}>
           Add a new task
         </Button>
-        <Grid mt={24}>
+        <Grid m={24}>
           <Grid.Col span={4}>
             🟤 Todo
             <Stack>
@@ -109,7 +109,7 @@ function App() {
             </Stack>
           </Grid.Col>
         </Grid>
-      </Container>
+      </Stack>
 
       <Modal
         opened={openAuthModal}
