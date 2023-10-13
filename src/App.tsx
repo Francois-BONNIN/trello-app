@@ -23,16 +23,29 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const [newTask, setNewTask] = useState(false);
+  const socket = io('http://localhost:3000/');
+  socket.connect();
 
   useEffect(() => {
-    // const socket = io('http://localhost:3000');
-    // socket.on("connect", () => {
-    //   console.log("connected");
-    // })
     axios.get(import.meta.env.VITE_API_URL + "tasks").then((response) => {
       setTasks(response.data);
     });
   }, []);
+
+  useEffect(() => {
+    socket.on("task", (task: Task) => {
+      setTasks((tasks) => [...tasks, task]);
+    });
+    socket.on("task:delete", (id: number) => {
+      setTasks((tasks) => tasks.filter((task) => task.id !== id));
+    });
+    socket.on("task:update", (task: Task) => {
+      setTasks((tasks) => tasks.map((t) => (t.id === task.id ? task : t)));
+    });
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    })
+  }, [socket]);
 
   useEffect(() => {
     const isConnected = localStorage.getItem("user");
